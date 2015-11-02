@@ -1,0 +1,42 @@
+{% extends 'cmdocapp/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="large-8 columns large-centered">
+        {% for document in documents %}
+        <div class="panel">
+            <h3>{{ document.title }}</h3>
+            <p>
+                Last modified: {{ document.last_modified }}, created on {{ document.create_time }}
+            </p>
+            <hr/>
+            <blockquote>
+                {{ document.description }}
+            </blockquote>
+
+            {% if document.users.count > 0 %}
+            <p>
+                <span class="label info radius">Users:</span>
+                {% for user in document.users.all %}
+                    <span class="label secondary radius">{{ user }}</span>
+                {% endfor %}
+            </p>
+            {% endif %}
+
+            <div class="left">
+                {{ document.section_set.count }} sections
+            </div>
+
+            <div class="right">
+                <a href="{% url 'render_html' document.id %}" target="_blank" class="label secondary radius"><i class="fi-page"></i> quick look</a>
+                <a href="{% url 'edit' document.id %}" class="label info radius"><i class="fi-pencil"></i> edit</a>
+                <a class="label success radius"><i class="fi-download"></i> download .pdf</a>
+                <a href="{% url 'proc_document_delete' document.id %}" class="label alert radius"><i class="fi-alert"></i> delete</a>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'cmdocapp/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="large-5 large-centered columns">
+        <div class="panel">
+            <form action="{% url 'process_login' %}" method="post">
+                {% csrf_token %}
+                <input type="text" placeholder="username" name="username" />
+                <input type="password" placeholder="password" name="password" />
+                <button class="expand">Log In</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

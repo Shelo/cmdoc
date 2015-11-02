@@ -1,0 +1,63 @@
+{% load staticfiles %}
+
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>CMMDOC</title>
+    <link rel="stylesheet" href="{% static 'css/foundation.css' %}"/>
+    <link rel="stylesheet" href="{% static 'icons/foundation-icons.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}"/>
+    <script src="{% static 'js/vendor/modernizr.js' %}"></script>
+    {% block extra_head %}
+    {% endblock %}
+</head>
+<body>
+
+<div class="contain-to-grid sticky">
+    <nav class="top-bar" data-topbar role="navigation">
+        <ul class="title-area">
+            <li class="name">
+                <h1><a href="{% url 'index' %}">CMMDOC</a></h1>
+            </li>
+        </ul>
+
+        <section class="top-bar-section">
+            <ul class="left">
+                {% if not user.is_authenticated %}
+                <li><a href="{% url 'login' %}"><i class="step fi-torso size-14"></i> Login</a></li>
+                {% else %}
+                <li><a class="uppercase">{{ user.username }}</a></li>
+                <li><a href="{% url 'process_logout' %}"><i class="step fi-torso size-14"></i> Logout</a></li>
+                {% endif %}
+            </ul>
+
+        {% if user.is_authenticated %}
+            <ul class="right">
+                <li><a href="{% url 'documents' %}"><i class="step fi-page size-14"></i> My Documents</a></li>
+                <li><a href="{% url 'collaboration' %}"><i class="step fi-torsos-all size-14"></i> Collaboration</a></li>
+                <li class="active"><a href="{% url 'new_document' %}"><i class="fi-plus size-14"></i> New Document</a></li>
+            </ul>
+        {% endif %}
+        </section>
+    </nav>
+</div>
+
+<p>
+
+</p>
+{% block content %}
+{% endblock %}
+
+<script src="{% static 'js/vendor/jquery.js' %}"></script>
+<script src="{% static 'js/foundation.min.js' %}"></script>
+
+{% block extra_js %}
+{% endblock %}
+
+<script>
+    $(document).foundation();
+</script>
+</body>
+</html>

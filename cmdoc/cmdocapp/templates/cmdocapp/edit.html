@@ -1,0 +1,265 @@
+{% extends 'cmdocapp/base.html' %}
+{% load staticfiles %}
+{% load markup %}
+
+{% block extra_head %}
+    <style>
+        p {
+            text-align: justify;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="large-12 columns">
+        <div class="panel">
+            <div class="panel right">
+                <ul class="tabs center" data-tab role="tablist">
+                    <li class="tab-title active" role="presentation"><a href="#panel2-1" role="tab" tabindex="0" aria-selected="true" aria-controls="panel2-1">Document</a></li>
+                    <li class="tab-title" role="presentation"><a href="#panel2-2" role="tab" tabindex="0" aria-selected="false" aria-controls="panel2-2">Messages</a></li>
+                </ul>
+            </div>
+
+            <h5 class="uppercase">Now editing</h5>
+            <h3>{{ document.title }}</h3>
+
+            <blockquote>
+                {{ document.description }}
+            </blockquote>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="large-8 columns">
+        <div class="tabs-content">
+            <section aria-hidden="false" class="content active" id="panel2-1">
+            {% for section in sections %}
+                <div class="section" data-position="{{ section.position }}" data-id="{{ section.id }}"
+                     data-edit-url="{% url 'proc_document_section_edit' document.id section.id %}">
+                    <div class="menu-bar right">
+                        <span class="label secondary radius" data-tooltip
+                              title="Modifier: {{ section.modifier }} {% if section.message %}<br>Message: {{ section.message }} {% endif %}"><i
+                                class="fi-info"></i></span>
+
+                        <a href="{% url 'proc_document_section_delete' document.id section.id %}"
+                           class="label alert radius" data-tooltip title="Remove this section"><i class="fi-x"></i></a>
+
+                        <a class="edit label success radius" data-tooltip title="Edit this section"><i
+                                class="fi-pencil"></i></a>
+
+                        <span class="add-before label info radius pointer" data-tooltip title="Add a section before this one">
+                            <i class="fi-plus"></i> <i class="fi-arrow-up"></i>
+                        </span>
+
+                        <div class="plaintext hide">{{ section.content }}</div>
+                    </div>
+
+                    {{ section.content | markdown:'safe' }}
+                </div>
+            {% endfor %}
+                <p></p>
+                <button class="new-section-button expand"><i class="fi-plus"></i> Add new section</button>
+            </section>
+
+            <section aria-hidden="true" class="content" id="panel2-2">
+                <div class="panel messages-frame">
+                    {% for message in messages %}
+                    <div class="message">
+                        <div class="time right">{{ message.create_time }}</div>
+                        {% if document.owner != user %}
+                        <div class="username label info radius">{{ message.author.username }}</div>
+                        {% else %}
+                        <div class="username label success radius">{{ message.author.username }}</div>
+                        {% endif %}
+                        <div class="content">{{ message.content }}</div>
+                        <hr/>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <form action="{% url 'send_message' document.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="text" name="content" autocomplete="off" placeholder="Type yor message here..." />
+                </form>
+            </section>
+        </div>
+
+    </div>
+
+    <div class="large-4 columns">
+
+        <div class="panel">
+            <h6 class="uppercase">Document</h6>
+            <ul class="side-nav">
+                <li><a href="#" data-reveal-id="change-title">Change document's title</a></li>
+                <li><a href="#" data-reveal-id="change-description">Change document's description</a></li>
+            </ul>
+
+            <h6 class="uppercase">
+                Collaborators
+
+                {% if document.owner == request.user %}
+                <span class="right">
+                    <a data-reveal-id="add-collaborator" class="label success radius">
+                        <i class="fi-plus"></i>
+                    </a>
+                </span>
+                {% endif %}
+            </h6>
+
+            <div>
+                <span class="label success radius">{{ document.owner.username }}</span>
+                {% for user in document.users.all %}
+                <span class="collaborator label info radius">
+                    {{ user.username }}
+
+                    {% if document.owner == request.user %}
+                    <a href="{% url 'remove_collaborator' document.id user.username %}" class="collaborator-remove fi-x"></a>
+                    {% endif %}
+                </span>
+                {% endfor %}
+            </div>
+
+            <p></p>
+
+            <h6 class="uppercase">Download</h6>
+            <ul class="side-nav">
+                <li><a href="#"><i class="fi-page-export-pdf"></i> Download as PDF</a></li>
+                <li><a href="#"><i class="fi-page-export-doc"></i> Download as LaTeX</a></li>
+
+                <li>
+                    <a target="_blank" href="{% url 'render_html' document.id %}">
+                        <i class="fi-html5"></i> Download as HTML
+                    </a>
+                </li>
+
+                <li>
+                    <a target="_blank" href="{% url 'render_raw' document.id %}">
+                        <i class="fi-page"></i> Download raw Markdown
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<!-- Chat -->
+<div class="panel callout" id="messages">
+    <div id="messages-frame" class="hide">
+        <div class="panel messages-frame">
+            {% for message in messages %}
+            <div class="message">
+                <div class="time right">{{ message.create_time }}</div>
+                <div class="username">{{ message.author.username }}</div>
+                <div class="content">{{ message.content }}</div>
+                <hr/>
+            </div>
+            {% endfor %}
+        </div>
+
+        <form action="{% url 'send_message' document.id %}" method="post">
+            {% csrf_token %}
+            <input type="text" name="content" autocomplete="off" placeholder="Type yor message here..." />
+        </form>
+
+        <hr/>
+    </div>
+
+    <div id="show-messages">
+        <h6 class="uppercase">Messages</h6>
+    </div>
+</div>
+
+<!-- Reveal Modals -->
+<div id="new-section-template" class="panel hide">
+    <h5 class="uppercase">EDIT SECTION</h5>
+    <hr/>
+    <form action="{% url 'proc_document_section_new' document.id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" class="position" name="position" value="0"/>
+        <textarea class="content" name="content" placeholder="Write your section content here..."
+                  rows="10"></textarea>
+        <input type="text" placeholder="Change message... (optional)" name="message"/>
+
+        <div class="row">
+            <div class="large-8 columns">
+                <button class="send-button expand success">Create new section</button>
+            </div>
+
+            <div class="large-4 columns">
+                <a class="cancel-button button expand alert">Cancel</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="change-title" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+    <h2 id="modalTitle">Change document's title:</h2>
+    <hr/>
+    <h4 class="uppercase">Old title:</h4>
+    {{ document.title }}
+
+    <p>
+
+    </p>
+
+    <form action="{% url 'edit_title' document.id %}" method="post">
+        {% csrf_token %}
+        <input type="text" name="title" placeholder="New document title..." />
+        <button class="expand">Confirm change title</button>
+    </form>
+
+    <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+</div>
+
+<div id="change-description" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+
+    <h2 id="modalTitle">Change document's description:</h2>
+    <hr/>
+    <h4 class="uppercase">Old description:</h4>
+    {{ document.description }}
+
+    <p>
+
+    </p>
+
+    <form action="{% url 'edit_description' document.id %}" method="post">
+        {% csrf_token %}
+        <input type="text" name="description" placeholder="New document description..." />
+        <button class="expand">Confirm change description</button>
+    </form>
+
+    <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+
+</div>
+
+<div id="add-collaborator" class="reveal-modal small" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+    <h2 id="modalTitle">Add collaborator</h2>
+    <hr/>
+    <p>
+
+    </p>
+
+    <form action="{% url 'add_collaborator' document.id %}" method="post">
+        {% csrf_token %}
+        <input type="text" name="username" placeholder="Collaborator user name..." />
+        <button class="expand">Add collaborator</button>
+    </form>
+
+    <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/editsync.js' %}"></script>
+<script src="{% static 'js/edit.js' %}"></script>
+
+<script>
+    const REQUEST_EDIT_URL = '{% url 'sync_request' document.id %}';
+    const CANCEL_EDIT_URL = '{% url 'sync_cancel' document.id %}';
+    const CSRF_TOKEN = '{{ csrf_token }}';
+</script>
+{% endblock %}
