@@ -15,9 +15,9 @@
     <div class="large-12 columns">
         <div class="panel">
             <div class="panel right">
-                <ul class="tabs center" data-tab role="tablist">
-                    <li class="tab-title active" role="presentation"><a href="#panel2-1" role="tab" tabindex="0" aria-selected="true" aria-controls="panel2-1">Document</a></li>
-                    <li class="tab-title" role="presentation"><a href="#panel2-2" role="tab" tabindex="0" aria-selected="false" aria-controls="panel2-2">Messages</a></li>
+                <ul class="tabs center"  data-options="deep_linking:true; scroll_to_content: false" data-tab>
+                    <li class="tab-title active" role="presentation"><a href="#documents" role="tab" tabindex="0" aria-selected="true" aria-controls="documents">Document</a></li>
+                    <li class="tab-title" role="presentation"><a href="#messages" role="tab" tabindex="0" aria-selected="false" aria-controls="messages">Messages</a></li>
                 </ul>
             </div>
 
@@ -34,7 +34,7 @@
 <div class="row">
     <div class="large-8 columns">
         <div class="tabs-content">
-            <section aria-hidden="false" class="content active" id="panel2-1">
+            <section aria-hidden="false" class="content active" id="documents">
             {% for section in sections %}
                 <div class="section" data-position="{{ section.position }}" data-id="{{ section.id }}"
                      data-edit-url="{% url 'proc_document_section_edit' document.id section.id %}">
@@ -63,7 +63,8 @@
                 <button class="new-section-button expand"><i class="fi-plus"></i> Add new section</button>
             </section>
 
-            <section aria-hidden="true" class="content" id="panel2-2">
+            <!-- BEGIN MESSAGES -->
+            <section aria-hidden="true" class="content" id="messages">
                 <div class="panel messages-frame">
                     {% for message in messages %}
                     <div class="message">
@@ -81,9 +82,10 @@
 
                 <form action="{% url 'send_message' document.id %}" method="post">
                     {% csrf_token %}
-                    <input type="text" name="content" autocomplete="off" placeholder="Type yor message here..." />
+                    <input type="text" maxlength="512" name="content" autocomplete="off" placeholder="Type yor message here..." />
                 </form>
             </section>
+            <!-- END MESSAGES -->
         </div>
 
     </div>
@@ -146,33 +148,6 @@
 </div>
 
 
-<!-- Chat -->
-<div class="panel callout" id="messages">
-    <div id="messages-frame" class="hide">
-        <div class="panel messages-frame">
-            {% for message in messages %}
-            <div class="message">
-                <div class="time right">{{ message.create_time }}</div>
-                <div class="username">{{ message.author.username }}</div>
-                <div class="content">{{ message.content }}</div>
-                <hr/>
-            </div>
-            {% endfor %}
-        </div>
-
-        <form action="{% url 'send_message' document.id %}" method="post">
-            {% csrf_token %}
-            <input type="text" name="content" autocomplete="off" placeholder="Type yor message here..." />
-        </form>
-
-        <hr/>
-    </div>
-
-    <div id="show-messages">
-        <h6 class="uppercase">Messages</h6>
-    </div>
-</div>
-
 <!-- Reveal Modals -->
 <div id="new-section-template" class="panel hide">
     <h5 class="uppercase">EDIT SECTION</h5>
@@ -199,12 +174,12 @@
 <div id="change-title" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
     <h2 id="modalTitle">Change document's title:</h2>
     <hr/>
+
     <h4 class="uppercase">Old title:</h4>
+
     {{ document.title }}
 
-    <p>
-
-    </p>
+    <p></p>
 
     <form action="{% url 'edit_title' document.id %}" method="post">
         {% csrf_token %}
@@ -233,7 +208,6 @@
     </form>
 
     <a class="close-reveal-modal" aria-label="Close">&#215;</a>
-
 </div>
 
 <div id="add-collaborator" class="reveal-modal small" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">

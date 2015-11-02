@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import F
@@ -171,7 +172,7 @@ def send_message(request, id):
     message = models.Message(author=request.user, content=request.POST.get('content'), document=document)
     message.save()
 
-    return redirect(edit, id=id)
+    return redirect(reverse(edit, kwargs={'id': id}) + '#fndtn-messages')
 
 
 @decorators.belongs_to_document

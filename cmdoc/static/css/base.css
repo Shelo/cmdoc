@@ -91,12 +91,12 @@
     margin-bottom: 5px;
 }
 
-#messages {
-    cursor: pointer;
-    padding: 15px 15px 5px;
-    position: fixed;
-    bottom: 0;
-    right: 11%;
-    margin: 0;
-    width: 325px;
+.tab-title a {
+    background-color: #74bfdd !important;
+    color: #f1f1f1 !important;
+}
+
+.tab-title.active a {
+    background-color: #008CBA !important;
+    color: #ffffff !important;
 }

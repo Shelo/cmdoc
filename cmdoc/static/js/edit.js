@@ -16,11 +16,16 @@ function makeTemplate() {
 function done() {
     var panel = $(this).parent().parent().parent().parent();
 
-    cancelEdit(panel.data('id'), function() {
+    var callback = function () {
         panel.remove();
         $(NEW_SECTION_CLASS).show();
         lock = false;
-    });
+    };
+
+    if (panel.data('id') != undefined)
+        cancelEdit(panel.data('id'), callback());
+    else
+        callback();
 }
 
 $(NEW_SECTION_CLASS).click(function () {
