@@ -58,9 +58,11 @@ def send_new_section(request, id):
         section.document_id = id
         section.modifier = request.user
 
-        position = section.position
+        if section.position == -1:
+            section.position = models.Section.objects.filter(document_id=section.document_id).last().position + 1
+
         models.Section.objects.filter(document_id=section.document_id,
-                                      position__gte=position).update(position=F('position') + 1)
+                                      position__gte=section.position).update(position=F('position') + 1)
 
         section.save()
 

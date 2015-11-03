@@ -1,0 +1,52 @@
+<div id="change-title" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+    <h2 id="modalTitle">Change document's title:</h2>
+    <hr/>
+
+    <h4 class="uppercase">Old title:</h4>
+
+    {{ document.title }}
+
+    <p></p>
+
+    <form action="{% url 'edit_title' document.id %}" method="post">
+        {% csrf_token %}
+        <input type="text" name="title" placeholder="New document title..." />
+        <button class="expand">Confirm change title</button>
+    </form>
+
+    <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+</div>
+
+<div id="change-description" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+
+    <h2 id="modalTitle">Change document's description:</h2>
+    <hr/>
+    <h4 class="uppercase">Old description:</h4>
+    {{ document.description }}
+
+    <p></p>
+
+    <form action="{% url 'edit_description' document.id %}" method="post">
+        {% csrf_token %}
+        <input type="text" name="description" placeholder="New document description..." />
+        <button class="expand">Confirm change description</button>
+    </form>
+
+    <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+</div>
+
+<div id="add-collaborator" class="reveal-modal small" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+    <h2 id="modalTitle">Add collaborator</h2>
+    <hr/>
+    <p>
+
+    </p>
+
+    <form action="{% url 'add_collaborator' document.id %}" method="post">
+        {% csrf_token %}
+        <input type="text" name="username" placeholder="Collaborator user name..." />
+        <button class="expand">Add collaborator</button>
+    </form>
+
+    <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+</div>
