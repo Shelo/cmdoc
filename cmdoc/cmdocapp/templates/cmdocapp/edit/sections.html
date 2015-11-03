@@ -11,7 +11,7 @@
                 <i class="fi-x"></i>
             </a>
 
-            <a class="edit label success radius" data-tooltip title="Edit this section">
+            <a class="edit-button label success radius" data-tooltip title="Edit this section">
                 <i class="fi-pencil"></i>
             </a>
 
@@ -19,9 +19,6 @@
                 <i class="fi-plus"></i>
                 <i class="fi-arrow-up"></i>
             </span>
-
-            <div class="plaintext hide">{{ section.content }}</div>
-
         </div>
 
         {{ section.content | markdown:'safe' }}

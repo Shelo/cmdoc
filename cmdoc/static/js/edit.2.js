@@ -9,15 +9,61 @@ var RequestModule = (function ($) {
         options = $.extend(options, args);
     };
 
+    var requestEdit = function (id, success, failure) {
+        $.ajax({
+            url: options.requestEdit,
+            method: 'POST',
+            data: {
+                sectionId: id,
+                csrfmiddlewaretoken: options.csrfToken
+            }
+        }).done(function(data) {
+            if (data.status) {
+                success(data);
+            } else {
+                if (failure) {
+                    failure(data);
+                } else {
+                    alert("Section is being edited by " + data.current);
+                }
+            }
+        });
+    };
+
+    var cancelEdit = function (id, success, failure) {
+        $.ajax({
+            url: options.cancel,
+            method: 'POST',
+            data: {
+                sectionId: id,
+                csrfmiddlewaretoken: options.csrfToken
+            }
+        }).done(function(data) {
+            if (data.status) {
+                success(data);
+            } else {
+                if (failure) {
+                    failure(data);
+                } else {
+                    alert("Failed to cancel edition.")
+                }
+            }
+        });
+    };
+
     return {
-        init: init
+        init: init,
+        requestEdit: requestEdit,
+        cancelEdit: cancelEdit
     };
 }(jQuery));
+
 
 var EditModule = (function ($) {
     var body = $('html, body');
 
     var lockEditor = false;
+    var currentEditor;
 
     var options = {
         addSectionButton: '#add-section',
@@ -28,7 +74,8 @@ var EditModule = (function ($) {
         template: {
             base: '#editor-template',
             cancel: '.cancel-button'
-        }
+        },
+        editButton: '.edit-button'
     };
 
     var init = function (config) {
@@ -41,6 +88,47 @@ var EditModule = (function ($) {
             if (confirm('Are you sure?')) {
                 window.location.href = $(this).data('href');
             }
+        });
+
+        $(options.editButton).click(function () {
+            createEditorFromEditButton($(this).parent().parent());
+        });
+    };
+
+    var createEditorFromEditButton = function (section) {
+        if (lockEditor)
+            return;
+
+        lockEditor = true;
+
+        var id = section.data('id');
+        var position = section.data('position');
+
+        RequestModule.requestEdit(id, function (data) {
+            currentEditor = new Editor(id, position, function (editor, panel) {
+                panel.insertBefore(section);
+                panel.find('textarea').val(data.content);
+                panel.find('form').attr('action', section.data('edit-url'));
+            }, function (editor, panel) {
+                RequestModule.cancelEdit(id, function () {
+                    panel.remove();
+                    editor.reset();
+                });
+            });
+        });
+    };
+
+    var createEditor = function () {
+        if (lockEditor)
+            return;
+
+        lockEditor = true;
+
+        currentEditor = new Editor(-1, -1, function (editor, panel) {
+            $(options.sectionsId).append(panel);
+        }, function (editor, panel) {
+            panel.remove();
+            editor.reset();
         });
     };
 
@@ -81,20 +169,6 @@ var EditModule = (function ($) {
             $(options.addSectionButton).show();
             lockEditor = false;
         };
-    };
-
-    var createEditor = function () {
-        if (lockEditor)
-            return;
-
-        lockEditor = true;
-
-        new Editor(-1, -1, function (editor, panel) {
-            $(options.sectionsId).append(panel);
-        }, function (editor, panel) {
-            panel.remove();
-            editor.reset();
-        });
     };
 
     return {

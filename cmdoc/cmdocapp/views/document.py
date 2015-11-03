@@ -194,7 +194,8 @@ def sync_sec_request(request, id):
 
     return JsonResponse({
         'status': response,
-        'current': section.editing.username
+        'current': section.editing.username,
+        'content': section.content,
     })
 
 
