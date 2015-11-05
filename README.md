@@ -4,4 +4,5 @@
 
 A platform for creating Markdown documents with collaborative features.
 
-Stands for "Collaborative MarkDown Documents"
+Stands for "**C**ollaborative **M**ark**D**own **Doc**uments"
+
