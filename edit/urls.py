@@ -27,25 +27,25 @@ urlpatterns = [
     ),
 
     url(
-        r'^(?P<document_id>[0-9]+)/update/title/$',
+        r'^(?P<document_id>[0-9]+)/update-title/$',
         views.update_title,
         name='update_title'
     ),
 
     url(
-        r'^(?P<document_id>[0-9]+)/update/description/$',
+        r'^(?P<document_id>[0-9]+)/update-description/$',
         views.update_description,
         name='update_description'
     ),
 
     url(
-        r'^(?P<document_id>[0-9]+)/rem/coll/(?P<username>.+)$',
+        r'^(?P<document_id>[0-9]+)/remove-collaborator/(?P<username>.+)$',
         views.remove_collaborator,
         name='remove_collaborator'
     ),
 
     url(
-        r'^(?P<document_id>[0-9]+)/add/coll/$',
+        r'^(?P<document_id>[0-9]+)/add-collaborator/$',
         views.add_collaborator,
         name='add_collaborator'
     ),
