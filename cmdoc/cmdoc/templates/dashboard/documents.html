@@ -1,4 +1,4 @@
-{% extends 'cmdocapp/base.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
 <div class="row">
@@ -28,10 +28,13 @@
             </div>
 
             <div class="right">
-                <a href="{% url 'render_html' document.id %}" target="_blank" class="label secondary radius"><i class="fi-page"></i> quick look</a>
-                <a href="{% url 'edit' document.id %}" class="label info radius"><i class="fi-pencil"></i> edit</a>
+                <a href="{% url 'edit:render_html' document.id %}" target="_blank" class="label secondary radius"><i class="fi-page"></i> quick look</a>
+
+                <a href="{% url 'edit:index' document.id %}" class="label info radius"><i class="fi-pencil"></i> edit</a>
+
                 <a class="label success radius"><i class="fi-download"></i> download .pdf</a>
-                <a href="{% url 'proc_document_delete' document.id %}" class="label alert radius"><i class="fi-alert"></i> delete</a>
+
+                <a href="{% url 'edit:proc_document_delete' document.id %}" class="label alert radius"><i class="fi-alert"></i> delete</a>
             </div>
             <div class="clearfix"></div>
         </div>

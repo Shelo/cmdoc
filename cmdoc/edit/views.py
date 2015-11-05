@@ -3,17 +3,18 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import F
-from cmdocapp import models, forms
-from cmdocapp.views import web
-from cmdocapp import decorators
-from cmdocapp import utils
+from edit import forms
+import dashboard.views
+from edit import decorators
+from edit import utils
+from edit import models
 
 
 @decorators.belongs_to_document
-@login_required(login_url=web.login)
-def edit(request, id):
+@login_required(login_url=dashboard.views.login)
+def index(request, id):
     document = get_object_or_404(models.Document, id=id)
-    return render(request, 'cmdocapp/edit.html', {
+    return render(request, 'edit/index.html', {
         'document': document,
         'sections': document.section_set.all(),
         'messages': [message for message in document.message_set.all()[:10]][-1::-1],
@@ -21,12 +22,12 @@ def edit(request, id):
     })
 
 
-@login_required(login_url=web.login)
+@login_required(login_url=dashboard.views.login)
 def new(request):
-    return render(request, 'cmdocapp/new_document.html')
+    return render(request, 'edit/new.html')
 
 
-@login_required(login_url=web.login)
+@login_required(login_url=dashboard.views.login)
 def create(request):
     document_form = forms.DocumentForm(request.POST)
 
@@ -35,21 +36,21 @@ def create(request):
         document.owner = request.user
         document.save()
 
-        return redirect(edit, id=document.id)
+        return redirect('edit:index', id=document.id)
 
-    return redirect(web.dashboard)
+    return redirect('dashboard:dashboard')
 
 
 @decorators.owner_of_document
-@login_required(login_url=web.login)
+@login_required(login_url=dashboard.views.login)
 def delete(request, id):
     document = get_object_or_404(models.Document, id=id)
     document.delete()
-    return redirect(web.documents)
+    return redirect('dashboard:documents')
 
 
 @decorators.belongs_to_document
-@login_required(login_url=web.login)
+@login_required(login_url=dashboard.views.login)
 def create_section(request, id):
     section_form = forms.SectionForm(request.POST)
 
@@ -60,18 +61,22 @@ def create_section(request, id):
         section.modifier = request.user
 
         if section.position == -1:
-            section.position = models.Section.objects.filter(document_id=section.document_id).last().position + 1
+            last = models.Section.objects.filter(document_id=section.document_id).last()
+            if last is None:
+                section.position = 0
+            else:
+                section.position = last.position + 1
 
         models.Section.objects.filter(document_id=section.document_id,
                                       position__gte=section.position).update(position=F('position') + 1)
 
         section.save()
 
-    return redirect(edit, id=id)
+    return redirect('edit:index', id=id)
 
 
 @decorators.belongs_to_document
-@login_required(login_url=web.login)
+@login_required(login_url=dashboard.views.login)
 def delete_section(request, id, section_id):
     section = get_object_or_404(models.Section, id=section_id)
     position = section.position
@@ -80,11 +85,11 @@ def delete_section(request, id, section_id):
                                   position__gte=position + 1).update(position=F('position') - 1)
 
     section.delete()
-    return redirect(edit, id=id)
+    return redirect('edit:index', id=id)
 
 
 @decorators.belongs_to_document
-@login_required(login_url=web.login)
+@login_required(login_url=dashboard.views.login)
 def update_section(request, id, section_id):
     section = get_object_or_404(models.Section, id=section_id)
     section.content = request.POST.get('content')
@@ -94,11 +99,11 @@ def update_section(request, id, section_id):
 
     utils.sync_sec_cancel(section_id)
 
-    return redirect(edit, id=id)
+    return redirect('edit:index', id=id)
 
 
 @decorators.belongs_to_document
-@login_required(login_url=web.login)
+@login_required(login_url=dashboard.views.login)
 def render_raw(request, id):
     document = get_object_or_404(models.Document, id=id)
     sections = document.section_set.all()
@@ -108,16 +113,16 @@ def render_raw(request, id):
 
 
 @decorators.belongs_to_document
-@login_required(login_url=web.login)
+@login_required(login_url=dashboard.views.login)
 def render_html(request, id):
     document = get_object_or_404(models.Document, id=id)
-    return render(request, 'cmdocapp/render.html', {
+    return render(request, 'edit/render.html', {
         'document': document
     })
 
 
 @decorators.belongs_to_document
-@login_required(login_url=web.login)
+@login_required(login_url=dashboard.views.login)
 def edit_title(request, id):
     document = get_object_or_404(models.Document, id=id)
     title = request.POST.get('title')
@@ -126,11 +131,11 @@ def edit_title(request, id):
         document.title = title
         document.save()
 
-    return redirect(edit, id=id)
+    return redirect('edit:index', id=id)
 
 
 @decorators.belongs_to_document
-@login_required(login_url=web.login)
+@login_required(login_url=dashboard.views.login)
 def edit_description(request, id):
     document = get_object_or_404(models.Document, id=id)
     description = request.POST.get('description')
@@ -139,11 +144,11 @@ def edit_description(request, id):
         document.description = description
         document.save()
 
-    return redirect(edit, id=id)
+    return redirect('edit:index', id=id)
 
 
 @decorators.belongs_to_document
-@login_required(login_url=web.login)
+@login_required(login_url=dashboard.views.login)
 def add_collaborator(request, id):
     document = get_object_or_404(models.Document, id=id)
     username = request.POST.get('username')
@@ -152,11 +157,11 @@ def add_collaborator(request, id):
     if user:
         document.users.add(user)
 
-    return redirect(edit, id=id)
+    return redirect('edit:index', id=id)
 
 
 @decorators.belongs_to_document
-@login_required(login_url=web.login)
+@login_required(login_url=dashboard.views.login)
 def remove_collaborator(request, id, username):
     document = get_object_or_404(models.Document, id=id)
     user = models.User.objects.filter(username=username).get()
@@ -164,22 +169,22 @@ def remove_collaborator(request, id, username):
     if user:
         document.users.remove(user)
 
-    return redirect(edit, id=id)
+    return redirect('edit:index', id=id)
 
 
 @decorators.belongs_to_document
-@login_required(login_url=web.login)
+@login_required(login_url=dashboard.views.login)
 def send_message(request, id):
     document = get_object_or_404(models.Document, id=id)
 
     message = models.Message(author=request.user, content=request.POST.get('content'), document=document)
     message.save()
 
-    return redirect(reverse(edit, kwargs={'id': id}) + '#fndtn-messages')
+    return redirect(reverse('edit:index', kwargs={'id': id}) + '#fndtn-messages')
 
 
 @decorators.belongs_to_document
-@login_required(login_url=web.login)
+@login_required(login_url=dashboard.views.login)
 def sync_sec_request(request, id):
     section_id = request.POST.get('sectionId')
     section = get_object_or_404(models.Section, id=section_id)
@@ -201,7 +206,7 @@ def sync_sec_request(request, id):
 
 
 @decorators.belongs_to_document
-@login_required(login_url=web.login)
+@login_required(login_url=dashboard.views.login)
 def sync_sec_cancel(request, id):
     section_id = request.POST.get('sectionId')
     utils.sync_sec_cancel(section_id)

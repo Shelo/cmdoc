@@ -19,25 +19,25 @@
     <nav class="top-bar" data-topbar role="navigation">
         <ul class="title-area">
             <li class="name">
-                <h1><a href="{% url 'index' %}">CMMDOC</a></h1>
+                <h1><a href="{% url 'dashboard:dashboard' %}">CMMDOC</a></h1>
             </li>
         </ul>
 
         <section class="top-bar-section">
             <ul class="left">
                 {% if not user.is_authenticated %}
-                <li><a href="{% url 'login' %}"><i class="step fi-torso size-14"></i> Login</a></li>
+                <li><a href="{% url 'dashboard:login' %}"><i class="step fi-torso size-14"></i> Login</a></li>
                 {% else %}
                 <li><a class="uppercase">{{ user.username }}</a></li>
-                <li><a href="{% url 'process_logout' %}"><i class="step fi-torso size-14"></i> Logout</a></li>
+                <li><a href="{% url 'dashboard:logout' %}"><i class="step fi-torso size-14"></i> Logout</a></li>
                 {% endif %}
             </ul>
 
         {% if user.is_authenticated %}
             <ul class="right">
-                <li><a href="{% url 'documents' %}"><i class="step fi-page size-14"></i> My Documents</a></li>
-                <li><a href="{% url 'collaboration' %}"><i class="step fi-torsos-all size-14"></i> Collaboration</a></li>
-                <li class="active"><a href="{% url 'new_document' %}"><i class="fi-plus size-14"></i> New Document</a></li>
+                <li><a href="{% url 'dashboard:documents' %}"><i class="step fi-page size-14"></i> My Documents</a></li>
+                <li><a href="{% url 'dashboard:collaboration' %}"><i class="step fi-torsos-all size-14"></i> Collaboration</a></li>
+                <li class="active"><a href="{% url 'edit:new_document' %}"><i class="fi-plus size-14"></i> New Document</a></li>
             </ul>
         {% endif %}
         </section>

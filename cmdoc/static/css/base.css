@@ -91,9 +91,23 @@
     margin-bottom: 5px;
 }
 
+.document-title {
+    margin-bottom: -20px !important;
+}
+
+.document-tabs {
+    margin-top: 0 !important;
+}
+
 .tab-title a {
-    background-color: #74bfdd !important;
-    color: #f1f1f1 !important;
+    outline: none;
+    background-color: #f7f7f7 !important;
+    color: #333 !important;
+    padding-bottom: 10px !important;
+    padding-top: 10px !important;
+    margin-bottom: 16px;
+    margin-left: 5px;
+    border-radius: 0 0 5px 5px;
 }
 
 .tab-title.active a {

@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from cmdocapp.validators import validate_token_key
+
 
 class Document(models.Model):
     title = models.CharField(max_length=256)
@@ -87,3 +89,12 @@ class Message(models.Model):
 
     class Meta:
         ordering = ['-create_time']
+
+
+class Token(models.Model):
+    document = models.ForeignKey(Document)
+    key = models.CharField(max_length=50, primary_key=True, validators=[validate_token_key])
+    value = models.TextField()
+
+    class Meta:
+        ordering = ['-document_id', 'key']

@@ -1,0 +1,35 @@
+{% load staticfiles %}
+{% load markup %}
+
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>{{ document.title }}</title>
+    <style>
+    * {
+        font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+    }
+
+    p {
+        text-align: justify;
+    }
+
+    h1 {
+        border-bottom: 1px #ccc solid;
+    }
+
+    .container {
+        width: 800px;
+        margin: auto;
+    }
+    </style>
+</head>
+<body>
+<div class="container">
+    {% for section in document.section_set.all %}
+    {{ section.content | markdown:'safe' }}
+    {% endfor %}
+</div>
+</body>
+</html>

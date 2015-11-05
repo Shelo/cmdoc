@@ -1,4 +1,4 @@
-{% extends 'cmdocapp/base.html' %}
+{% extends 'base.html' %}
 {% load staticfiles %}
 {% load markup %}
 
@@ -41,7 +41,7 @@
         <div class="tabs-content">
             <section aria-hidden="false" class="content active" id="documents">
                 <div id="sections">
-                    {% include 'cmdocapp/edit/sections.html' %}
+                    {% include 'edit/sections.html' %}
                 </div>
 
                 <p></p>
@@ -66,14 +66,14 @@
                     {% endfor %}
                 </div>
 
-                <form action="{% url 'send_message' document.id %}" method="post">
+                <form action="{% url 'edit:send_message' document.id %}" method="post">
                     {% csrf_token %}
                     <input type="text" maxlength="512" name="content" autocomplete="off" placeholder="Type yor message here..." />
                 </form>
             </section>
 
             <section aria-hidden="true" class="content" id="changelog">
-                {% include 'cmdocapp/edit/notifications.html' %}
+                {% include 'edit/notifications.html' %}
             </section>
 
             <section aria-hidden="true" class="content" id="tokens">
@@ -119,7 +119,7 @@
                     {{ user.username }}
 
                     {% if document.owner == request.user %}
-                    <a href="{% url 'remove_collaborator' document.id user.username %}" class="collaborator-remove fi-x"></a>
+                    <a href="{% url 'edit:remove_collaborator' document.id user.username %}" class="collaborator-remove fi-x"></a>
                     {% endif %}
                 </span>
                 {% endfor %}
@@ -133,13 +133,13 @@
                 <li><a href="#"><i class="fi-page-export-doc"></i> Download as LaTeX</a></li>
 
                 <li>
-                    <a target="_blank" href="{% url 'render_html' document.id %}">
+                    <a target="_blank" href="{% url 'edit:render_html' document.id %}">
                         <i class="fi-html5"></i> Download as HTML
                     </a>
                 </li>
 
                 <li>
-                    <a target="_blank" href="{% url 'render_raw' document.id %}">
+                    <a target="_blank" href="{% url 'edit:render_raw' document.id %}">
                         <i class="fi-page"></i> Download raw Markdown
                     </a>
                 </li>
@@ -152,7 +152,7 @@
     <h5 class="uppercase">EDIT SECTION</h5>
     <hr/>
 
-    <form action="{% url 'section_create' document.id %}" method="post">
+    <form action="{% url 'edit:section_create' document.id %}" method="post">
         {% csrf_token %}
         <input type="hidden" class="position" name="position" value="0" />
 
@@ -171,7 +171,7 @@
         </div>
     </form>
 </div>
-    {% include "cmdocapp/edit/edit_reveal_modals.html" %}
+    {% include "edit/edit_reveal_modals.html" %}
 {% endblock %}
 
 {% block extra_js %}
@@ -181,8 +181,8 @@
     EditModule.init();
 
     RequestModule.init({
-        'requestEdit': '{% url 'sync_request' document.id %}',
-        'cancel': '{% url 'sync_cancel' document.id %}',
+        'requestEdit': '{% url 'edit:sync_request' document.id %}',
+        'cancel': '{% url 'edit:sync_cancel' document.id %}',
         'csrfToken': '{{ csrf_token }}'
     });
 </script>

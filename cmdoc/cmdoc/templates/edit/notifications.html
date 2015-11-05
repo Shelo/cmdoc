@@ -1,0 +1,37 @@
+{% for notification in notifications %}
+    {% if notification.section %}
+        <i class="fi-pencil"></i>
+
+        <span class="label secondary radius">{{ notification.modifier.username }}</span> modified a section in the document
+        <a class="label success radius"
+           href="{% url 'edit:index' notification.document.id %}">{{ notification.document.title }}</a>
+
+    {% else %}
+
+        <i class="fi-plus"></i>
+
+        <span class="label secondary radius">{{ notification.modifier.username }}</span> created the document
+        <a class="label success radius"
+           href="{% url 'edit:index' notification.document.id %}">{{ notification.document.title }}</a>.
+
+    {% endif %}
+
+    <span class="right">{{ notification.modify_time }}</span>
+
+    <div class="change-message">
+        {% if notification.section %}
+
+            {% if notification.message %}
+                Change section with the message <strong>{{ notification.message }}</strong>.
+            {% else %}
+                Change section with no message.
+            {% endif %}
+
+        {% else %}
+
+            Described as "{{ notification.document.description }}"
+
+        {% endif %}
+    </div>
+    <hr/>
+{% endfor %}
