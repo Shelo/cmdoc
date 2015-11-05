@@ -13,6 +13,7 @@ def belongs_to_document(method):
             return method(request, document_id, *args, **kwargs)
         else:
             return HttpResponseForbidden()
+
     return wrapper
 
 
@@ -26,4 +27,5 @@ def owner_of_document(method):
             return method(request, document_id, *args, **kwargs)
         else:
             return HttpResponseForbidden()
+
     return wrapper

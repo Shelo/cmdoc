@@ -2,8 +2,9 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import F
 from django.http import JsonResponse
 from django.shortcuts import redirect, get_object_or_404
-from edit import decorators, models
-from section import forms, utils
+from edit import decorators
+from section import forms, utils, models
+import edit.models
 
 
 @decorators.belongs_to_document
@@ -18,14 +19,19 @@ def create(request, document_id):
         section.modifier = request.user
 
         if section.position == -1:
-            last = models.Section.objects.filter(document_id=section.document_id).last()
+            last = models.Section.objects.filter(
+                document_id=section.document_id
+            ).last()
+
             if last is None:
                 section.position = 0
             else:
                 section.position = last.position + 1
 
-        models.Section.objects.filter(document_id=section.document_id,
-                                      position__gte=section.position).update(position=F('position') + 1)
+        models.Section.objects.filter(
+            document_id=section.document_id,
+            position__gte=section.position
+        ).update(position=F('position') + 1)
 
         section.save()
 
@@ -54,7 +60,7 @@ def update(request, document_id, section_id):
     section.message = request.POST.get('message')
     section.save()
 
-    utils.sync_sec_cancel(section_id)
+    utils.release_section(section_id)
 
     return redirect('edit:index', document_id=document_id)
 
@@ -85,7 +91,7 @@ def acquire(request, document_id):
 @login_required(login_url='dashboard:login')
 def release(request, document_id):
     section_id = request.POST.get('sectionId')
-    utils.sync_sec_cancel(section_id)
+    utils.release_section(section_id)
 
     return JsonResponse({
         'status': True

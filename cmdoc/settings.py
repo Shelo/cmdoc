@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django_markwhat',
     'dashboard',
     'edit',
+    'section',
 )
 
 MIDDLEWARE_CLASSES = (

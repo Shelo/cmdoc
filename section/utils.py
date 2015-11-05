@@ -1,8 +1,9 @@
 from django.shortcuts import get_object_or_404
-from edit import models
+
+from section import models
 
 
-def sync_sec_cancel(section_id):
+def release_section(section_id):
     section = get_object_or_404(models.Section, id=section_id)
 
     section.editing = None

@@ -1,5 +1,5 @@
 from django import forms
-from edit import models
+from section import models
 
 class SectionForm(forms.ModelForm):
     class Meta:
