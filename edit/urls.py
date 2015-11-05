@@ -55,16 +55,4 @@ urlpatterns = [
         views.send_message,
         name='send_message'
     ),
-
-    url(
-        r'^(?P<document_id>[0-9]+)/html/$',
-        views.render_html,
-        name='render_html'
-    ),
-
-    url(
-        r'^(?P<document_id>[0-9]+)/raw/',
-        views.render_raw,
-        name='render_raw'
-    ),
 ]

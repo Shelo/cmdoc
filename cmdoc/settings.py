@@ -39,6 +39,8 @@ INSTALLED_APPS = (
     'dashboard',
     'edit',
     'section',
+    'render',
+    'tokens',
 )
 
 MIDDLEWARE_CLASSES = (

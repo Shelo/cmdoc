@@ -133,13 +133,13 @@
                 <li><a href="#"><i class="fi-page-export-doc"></i> Download as LaTeX</a></li>
 
                 <li>
-                    <a target="_blank" href="{% url 'edit:render_html' document.id %}">
+                    <a target="_blank" href="{% url 'render:html' document.id %}">
                         <i class="fi-html5"></i> Download as HTML
                     </a>
                 </li>
 
                 <li>
-                    <a target="_blank" href="{% url 'edit:render_raw' document.id %}">
+                    <a target="_blank" href="{% url 'render:raw' document.id %}">
                         <i class="fi-page"></i> Download raw Markdown
                     </a>
                 </li>

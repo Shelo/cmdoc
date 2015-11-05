@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from cmdocapp.validators import validate_token_key
+from edit.validators import validate_token_key
 
 import section.models
 

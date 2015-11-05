@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 from django.conf import settings
-import cmdocapp.validators
+import edit.validators
 
 
 class Migration(migrations.Migration):
@@ -69,7 +69,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Token',
             fields=[
-                ('key', models.CharField(max_length=50, serialize=False, primary_key=True, validators=[cmdocapp.validators.validate_token_key])),
+                ('key', models.CharField(max_length=50, serialize=False, primary_key=True, validators=[edit.validators.validate_token_key])),
                 ('value', models.TextField()),
                 ('document', models.ForeignKey(to='edit.Document')),
             ],
@@ -90,6 +90,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='changenotification',
             name='section',
-            field=models.ForeignKey(to='edit.Section', null=True),
+            field=models.ForeignKey(to='section.Section', null=True),
         ),
     ]

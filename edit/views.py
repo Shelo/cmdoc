@@ -49,25 +49,6 @@ def remove(request, document_id):
 
 @decorators.belongs_to_document
 @login_required(login_url=dashboard.views.login)
-def render_raw(request, document_id):
-    document = get_object_or_404(models.Document, id=document_id)
-    sections = document.section_set.all()
-
-    content = '\n\n'.join([section.content for section in sections])
-    return HttpResponse(content, content_type='text/plain')
-
-
-@decorators.belongs_to_document
-@login_required(login_url=dashboard.views.login)
-def render_html(request, document_id):
-    document = get_object_or_404(models.Document, id=document_id)
-    return render(request, 'edit/render.html', {
-        'document': document
-    })
-
-
-@decorators.belongs_to_document
-@login_required(login_url=dashboard.views.login)
 def update_title(request, document_id):
     document = get_object_or_404(models.Document, id=document_id)
     title = request.POST.get('title')
