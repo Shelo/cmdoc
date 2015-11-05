@@ -152,7 +152,7 @@
     <h5 class="uppercase">EDIT SECTION</h5>
     <hr/>
 
-    <form action="{% url 'edit:section_create' document.id %}" method="post">
+    <form action="{% url 'section:create' document.id %}" method="post">
         {% csrf_token %}
         <input type="hidden" class="position" name="position" value="0" />
 
@@ -171,7 +171,7 @@
         </div>
     </form>
 </div>
-    {% include "edit/edit_reveal_modals.html" %}
+    {% include "edit/reveal_modals.html" %}
 {% endblock %}
 
 {% block extra_js %}
@@ -181,8 +181,8 @@
     EditModule.init();
 
     RequestModule.init({
-        'requestEdit': '{% url 'edit:sync_request' document.id %}',
-        'cancel': '{% url 'edit:sync_cancel' document.id %}',
+        'requestEdit': '{% url 'section:acquire' document.id %}',
+        'cancel': '{% url 'section:release' document.id %}',
         'csrfToken': '{{ csrf_token }}'
     });
 </script>

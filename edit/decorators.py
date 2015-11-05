@@ -5,12 +5,12 @@ from django.http.response import HttpResponseForbidden
 
 def belongs_to_document(method):
     @functools.wraps(method)
-    def wrapper(request, id, *args, **kwargs):
+    def wrapper(request, document_id, *args, **kwargs):
         user = request.user
-        document = models.Document.objects.filter(id=id).get()
+        document = models.Document.objects.filter(id=document_id).get()
 
         if document.has_user(user):
-            return method(request, id, *args, **kwargs)
+            return method(request, document_id, *args, **kwargs)
         else:
             return HttpResponseForbidden()
     return wrapper
@@ -18,12 +18,12 @@ def belongs_to_document(method):
 
 def owner_of_document(method):
     @functools.wraps(method)
-    def wrapper(request, id, *args, **kwargs):
+    def wrapper(request, document_id, *args, **kwargs):
         user = request.user
-        document = models.Document.objects.filter(id=id).get()
+        document = models.Document.objects.filter(id=document_id).get()
 
         if document.owner == user:
-            return method(request, id, *args, **kwargs)
+            return method(request, document_id, *args, **kwargs)
         else:
             return HttpResponseForbidden()
     return wrapper

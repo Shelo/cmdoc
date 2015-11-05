@@ -8,7 +8,7 @@
 
     <p></p>
 
-    <form action="{% url 'edit:edit_title' document.id %}" method="post">
+    <form action="{% url 'edit:update_title' document.id %}" method="post">
         {% csrf_token %}
         <input type="text" name="title" placeholder="New document title..." />
         <button class="expand">Confirm change title</button>
@@ -26,7 +26,7 @@
 
     <p></p>
 
-    <form action="{% url 'edit:edit_description' document.id %}" method="post">
+    <form action="{% url 'edit:update_description' document.id %}" method="post">
         {% csrf_token %}
         <input type="text" name="description" placeholder="New document description..." />
         <button class="expand">Confirm change description</button>
