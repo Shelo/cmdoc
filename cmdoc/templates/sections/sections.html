@@ -1,13 +1,14 @@
 {% load markup %}
+
 {% for section in sections %}
-    <div id="sec-{{ section.id }}" class="section" data-position="{{ section.position }}" data-id="{{ section.id }}" data-edit-url="{% url 'section:update' document.id section.id %}">
+    <div id="sec-{{ section.id }}" class="section" data-position="{{ section.position }}" data-id="{{ section.id }}" data-edit-url="{% url 'section:update' section.document.id section.id %}">
         <div class="menu-bar right">
 
             <span class="label secondary radius" data-tooltip title="Modifier: {{ section.modifier }} {% if section.message %} <br> Message: {{ section.message }} {% endif %}">
                 <i class="fi-info"></i>
             </span>
 
-            <a data-href="{% url 'section:remove' document.id section.id %}" class="section-remove label alert radius" data-tooltip title="Remove this section">
+            <a data-href="{% url 'section:remove' section.document.id section.id %}" class="section-remove label alert radius" data-tooltip title="Remove this section">
                 <i class="fi-x"></i>
             </a>
 

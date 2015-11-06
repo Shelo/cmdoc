@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 from django.conf import settings
-import edit.validators
 
 
 class Migration(migrations.Migration):
@@ -49,34 +48,6 @@ class Migration(migrations.Migration):
                 'ordering': ['-create_time'],
             },
         ),
-        migrations.CreateModel(
-            name='Section',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('content', models.TextField()),
-                ('position', models.IntegerField(default=0)),
-                ('last_modified', models.DateTimeField(auto_now=True)),
-                ('message', models.CharField(max_length=256, blank=True)),
-                ('document', models.ForeignKey(to='edit.Document')),
-                ('editing', models.ForeignKey(related_name='editing_user', blank=True, to=settings.AUTH_USER_MODEL, null=True)),
-                ('modifier', models.ForeignKey(to=settings.AUTH_USER_MODEL, null=True)),
-                ('owner', models.ForeignKey(related_name='section_owner', to=settings.AUTH_USER_MODEL)),
-            ],
-            options={
-                'ordering': ['-document_id', 'position'],
-            },
-        ),
-        migrations.CreateModel(
-            name='Token',
-            fields=[
-                ('key', models.CharField(max_length=50, serialize=False, primary_key=True, validators=[edit.validators.validate_token_key])),
-                ('value', models.TextField()),
-                ('document', models.ForeignKey(to='edit.Document')),
-            ],
-            options={
-                'ordering': ['-document_id', 'key'],
-            },
-        ),
         migrations.AddField(
             model_name='changenotification',
             name='document',
@@ -86,10 +57,5 @@ class Migration(migrations.Migration):
             model_name='changenotification',
             name='modifier',
             field=models.ForeignKey(to=settings.AUTH_USER_MODEL),
-        ),
-        migrations.AddField(
-            model_name='changenotification',
-            name='section',
-            field=models.ForeignKey(to='section.Section', null=True),
         ),
     ]

@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% load markup %}
+{% load section %}
 
 {% block extra_head %}
     <style>
@@ -41,7 +42,7 @@
         <div class="tabs-content">
             <section aria-hidden="false" class="content active" id="documents">
                 <div id="sections">
-                    {% include 'edit/sections.html' %}
+                    {% show_sections sections %}
                 </div>
 
                 <p></p>

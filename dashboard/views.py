@@ -59,7 +59,7 @@ def session(request):
             login_user(request, user)
             return redirect('dashboard:dashboard')
 
-    return redirect(login)
+    return redirect('dashboard:login')
 
 
 @login_required(login_url=login)

@@ -1,6 +1,5 @@
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
 from edit import forms, decorators, models
@@ -34,7 +33,7 @@ def create(request):
         document.owner = request.user
         document.save()
 
-        return redirect('edit:index', id=document.id)
+        return redirect('edit:index', document_id=document.id)
 
     return redirect('dashboard:dashboard')
 

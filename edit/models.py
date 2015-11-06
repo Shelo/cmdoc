@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from edit.validators import validate_token_key
 
 import section.models
 
@@ -35,7 +34,7 @@ class Document(models.Model):
 
 class ChangeNotification(models.Model):
     document = models.ForeignKey(Document)
-    section = models.ForeignKey(section.models.Section, null=True)
+    section = models.ForeignKey('section.Section', null=True)
     modify_time = models.DateTimeField(auto_now_add=True)
     modifier = models.ForeignKey(User)
     message = models.CharField(max_length=255, null=True, blank=True)
@@ -52,12 +51,3 @@ class Message(models.Model):
 
     class Meta:
         ordering = ['-create_time']
-
-
-class Token(models.Model):
-    document = models.ForeignKey(Document)
-    key = models.CharField(max_length=50, primary_key=True, validators=[validate_token_key])
-    value = models.TextField()
-
-    class Meta:
-        ordering = ['-document_id', 'key']
