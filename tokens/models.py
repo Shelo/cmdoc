@@ -10,3 +10,6 @@ class Token(models.Model):
 
     class Meta:
         ordering = ['-document_id', 'key']
+
+    def __str__(self):
+        return self.key

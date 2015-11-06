@@ -77,8 +77,37 @@
                 {% include 'edit/notifications.html' %}
             </section>
 
-            <section aria-hidden="true" class="content" id="tokens">
+            <section aria-hidden="true" class="content expanded" id="tokens">
+                <h3>
+                    Tokens
+                    <span class="right">
+                        <a data-reveal-id="token-reveal" id="add-token" class="label success radius">
+                            <i class="fi-plus"></i>
+                        </a>
+                    </span>
+                </h3>
 
+                {% for token in tokens %}
+                <div class="row token-row">
+                    <div class="large-2 columns">
+                        <b>{{ token.key }}</b>
+                    </div>
+
+                    <div class="large-10 columns">
+                        <div class="token-buttons">
+                            <a href="{% url 'tokens:remove' document.id token.key %}" class="label alert radius">
+                                <i class="fi-x"></i>
+                            </a>
+
+                            <a class="label info radius edit-token">
+                                <i class="fi-pencil"></i>
+                            </a>
+                        </div>
+
+                        {{ token.value }}
+                    </div>
+                </div>
+                {% endfor %}
             </section>
 
             <section aria-hidden="true" class="content" id="files">

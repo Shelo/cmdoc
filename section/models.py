@@ -44,3 +44,10 @@ class Section(models.Model):
     def save_no_notification(self, *args, **kwargs):
         self.document.save()
         super(Section, self).save(*args, **kwargs)
+
+    def parse_content(self, tokens=None):
+        if tokens is None:
+            tokens = self.document.token_set.all()
+
+        for token in tokens:
+            self.content = self.content.replace('${%s}' % token.key, token.value)

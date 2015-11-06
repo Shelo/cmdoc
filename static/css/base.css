@@ -38,6 +38,10 @@
     font-size: 72px;
 }
 
+.little-info {
+    font-size: 12px;
+}
+
 .uppercase {
     text-transform: uppercase !important;
 }
@@ -113,4 +117,28 @@
 .tab-title.active a {
     background-color: #008CBA !important;
     color: #ffffff !important;
+}
+
+.token-row {
+    border: 1px transparent dashed;
+    padding: 5px;
+}
+
+.token-row .token-buttons {
+    display: none;
+    margin: -2px;
+    position: absolute;
+    right: 5px;
+}
+
+.token-row:hover {
+    border: 1px #ccc dashed;
+}
+
+.token-row:hover .token-buttons {
+    display: block;
+}
+
+.token-row .token-buttons .label {
+    cursor: pointer;
 }

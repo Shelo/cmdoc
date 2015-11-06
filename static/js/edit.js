@@ -207,3 +207,13 @@ var EditModule = (function ($) {
         init: init
     };
 }(jQuery));
+
+var TokensModule = (function ($) {
+
+    var editToken = $('.edit-token');
+
+    editToken.click(function () {
+        alert(1);
+    });
+
+}(jQuery));

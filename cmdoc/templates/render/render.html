@@ -27,7 +27,7 @@
 </head>
 <body>
 <div class="container">
-    {% for section in document.section_set.all %}
+    {% for section in sections %}
     {{ section.content | markdown:'safe' }}
     {% endfor %}
 </div>

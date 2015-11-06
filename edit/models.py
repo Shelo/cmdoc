@@ -31,6 +31,22 @@ class Document(models.Model):
             notification = ChangeNotification(document=self, modifier=self.owner, message=self.description)
             notification.save()
 
+    def parsed_content(self):
+        """
+        Parse the content of every section in the document.
+
+        :return: all sections parsed with the tokens.
+        """
+        sections = self.section_set.all()
+        tokens = self.token_set.all()
+
+        parsed_sections = []
+        for sec in sections:
+            sec.parse_content(tokens)
+            parsed_sections.append(sec)
+
+        return parsed_sections
+
 
 class ChangeNotification(models.Model):
     document = models.ForeignKey(Document)

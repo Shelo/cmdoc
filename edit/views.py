@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from edit import forms, decorators, models
 import dashboard.views
+import tokens.models
 
 
 @decorators.belongs_to_document
@@ -11,11 +12,18 @@ import dashboard.views
 def index(request, document_id):
     document = get_object_or_404(models.Document, id=document_id)
 
+    sections = document.section_set.all()
+    doc_tokens = document.token_set.all()
+
+    for section in sections:
+        section.parse_content(doc_tokens)
+
     return render(request, 'edit/index.html', {
         'document': document,
-        'sections': document.section_set.all(),
+        'sections': sections,
         'messages': [message for message in document.message_set.all()[:10]][-1::-1],
-        'notifications': document.changenotification_set.all()
+        'notifications': document.changenotification_set.all(),
+        'tokens': document.token_set.all(),
     })
 
 

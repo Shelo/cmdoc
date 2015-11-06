@@ -8,7 +8,7 @@ from edit import decorators, models
 @login_required(login_url='dashboard:login')
 def raw(request, document_id):
     document = get_object_or_404(models.Document, id=document_id)
-    sections = document.section_set.all()
+    sections = document.parsed_content()
 
     content = '\n\n'.join([section.content for section in sections])
 
@@ -21,5 +21,6 @@ def html(request, document_id):
     document = get_object_or_404(models.Document, id=document_id)
 
     return render(request, 'render/render.html', {
-        'document': document
+        'document': document,
+        'sections': document.parsed_content()
     })
