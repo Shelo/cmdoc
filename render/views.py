@@ -1,3 +1,4 @@
+import codecs
 import os
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -60,7 +61,7 @@ def pdf(request, document_id):
     output_pdf_url = os.path.join(settings.MEDIA_URL, str(document_id) + ".pdf")
     output_pdf_real = os.path.join(settings.MEDIA_ROOT, str(document_id) + ".pdf")
 
-    temp = open(os.path.join(settings.MEDIA_ROOT, str(document_id) + ".md"), "w+")
+    temp = codecs.open(os.path.join(settings.MEDIA_ROOT, str(document_id) + ".md"), "w+", "utf-8")
     temp.write(content)
     temp.close()
 
