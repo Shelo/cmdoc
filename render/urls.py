@@ -13,4 +13,10 @@ urlpatterns = [
         views.raw,
         name='raw'
     ),
+
+    url(
+        r'^(?P<document_id>[0-9]+)/latex/',
+        views.latex,
+        name='latex'
+    ),
 ]

@@ -1,7 +1,10 @@
+import os
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
+import subprocess
 from edit import decorators, models
+import tempfile
 
 
 @decorators.belongs_to_document
@@ -24,3 +27,22 @@ def html(request, document_id):
         'document': document,
         'sections': document.parsed_content()
     })
+
+
+@decorators.belongs_to_document
+@login_required(login_url='dashboard:login')
+def latex(request, document_id):
+    document = get_object_or_404(models.Document, id=document_id)
+    sections = document.parsed_content()
+
+    content = '\n\n'.join([section.content for section in sections])
+
+    temp = tempfile.NamedTemporaryFile(delete=False)
+    temp.write(content)
+    temp.close()
+
+    latex_code = subprocess.check_output(["pandoc", "-f", "markdown", "-t", "latex", temp.name])
+
+    os.remove(temp.name)
+
+    return HttpResponse(latex_code, content_type='text/plain')

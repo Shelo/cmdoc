@@ -31,4 +31,10 @@ urlpatterns = [
         views.release,
         name='release'
     ),
+
+    url(
+        r'^(?P<document_id>[0-9]+)/check_status/',
+        views.check_status,
+        name='check_status'
+    ),
 ]

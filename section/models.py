@@ -13,6 +13,7 @@ class Section(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
     message = models.CharField(max_length=256, blank=True)
     modifier = models.ForeignKey(User, null=True)
+    serial = models.IntegerField(default=0)
 
     editing = models.ForeignKey(User, null=True, blank=True, related_name='editing_user')
 
@@ -29,6 +30,9 @@ class Section(models.Model):
         return self.short_content()
 
     def save(self, *args, **kwargs):
+        # indicate that the section was modified.
+        self.serial += 1
+
         self.save_no_notification(*args, **kwargs)
 
         # when saving a section a change notification has to be registered.
@@ -43,6 +47,7 @@ class Section(models.Model):
 
     def save_no_notification(self, *args, **kwargs):
         self.document.save()
+
         super(Section, self).save(*args, **kwargs)
 
     def parse_content(self, tokens=None):

@@ -11,6 +11,7 @@ class Document(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
     owner = models.ForeignKey(User, related_name='document_owner')
     users = models.ManyToManyField(User)
+    serial = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title
@@ -23,12 +24,16 @@ class Document(models.Model):
 
     def save(self, *args, **kwargs):
         is_new = bool(self.pk is None)
+        self.serial += 1
         super(Document, self).save(*args, **kwargs)
 
         if is_new:
             print 1
             # notification for new document created.
-            notification = ChangeNotification(document=self, modifier=self.owner, message=self.description)
+            notification = ChangeNotification(
+                document=self,
+                modifier=self.owner,
+                message=self.description)
             notification.save()
 
     def parsed_content(self):

@@ -1,3 +1,4 @@
+from time import strptime
 from django.contrib.auth.decorators import login_required
 from django.db.models import F
 from django.http import JsonResponse
@@ -5,6 +6,7 @@ from django.shortcuts import redirect, get_object_or_404
 from edit import decorators
 from section import forms, utils, models
 import edit.models
+import json
 
 
 @decorators.belongs_to_document
@@ -96,3 +98,43 @@ def release(request, document_id):
     return JsonResponse({
         'status': True
     })
+
+
+@decorators.belongs_to_document
+@login_required(login_url='dashboard:login')
+def check_status(request, document_id):
+    sections_data = json.loads(request.POST.get('sections_data'))
+    serial = int(request.POST.get('serial'))
+    document = get_object_or_404(edit.models.Document, id=document_id)
+
+    response = False
+    result = []
+
+    # this just won't work well, since this is a lot of overheat.
+    # maybe a way of optimization is to compare the latest modification time of the document
+    # and check only if it was modified recently.
+
+    if document.serial > serial:
+        response = True
+
+        for data in sections_data:
+            section_id = int(data['id'])
+            section_serial = int(data['serial'])
+
+            section = models.Section.objects.get(id=section_id)
+
+            if section.serial > section_serial:
+                result.append({
+                    'content': section.content,
+                    'serial': section.serial,
+                    'modifier': section.modifier,
+                    'message': section.message
+                })
+
+    return JsonResponse({
+        'status': response,
+        'serial': document.serial,
+        'result': result
+    })
+
+

@@ -160,7 +160,11 @@
             <h6 class="uppercase">Download</h6>
             <ul class="side-nav">
                 <li><a href="#"><i class="fi-page-export-pdf"></i> Download as PDF</a></li>
-                <li><a href="#"><i class="fi-page-export-doc"></i> Download as LaTeX</a></li>
+                <li>
+                    <a href="{% url 'render:latex' document.id %}" target="_blank">
+                        <i class="fi-page-export-doc"></i> Download as LaTeX
+                    </a>
+                </li>
 
                 <li>
                     <a target="_blank" href="{% url 'render:html' document.id %}">
@@ -215,5 +219,13 @@
         'cancel': '{% url 'section:release' document.id %}',
         'csrfToken': '{{ csrf_token }}'
     });
+
+    /*
+    SyncService.init(
+            '{% url 'section:check_status' document.id %}',
+            '{{ document.serial }}',
+            '{{ csrf_token }}'
+    );
+    */
 </script>
 {% endblock %}

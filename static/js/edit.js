@@ -217,3 +217,52 @@ var TokensModule = (function ($) {
     });
 
 }(jQuery));
+
+
+var SyncService = (function ($) {
+    var sections = [];
+    var url = "";
+    var serial = 0;
+    var csrf;
+
+    var update = function () {
+        var data = [];
+
+        for (var i = 0; i < sections.length; i++) {
+            data.push({
+                id: sections[i].data('id'),
+                serial: sections[i].data('serial')
+            })
+        }
+
+        $.ajax({
+            url: url,
+            data: {
+                'serial': serial,
+                'sections_data': JSON.stringify(data),
+                csrfmiddlewaretoken: csrf
+            },
+            method: 'post'
+        })
+            .done(function (data) {
+                console.log(data);
+                serial = data.serial;
+            })
+    };
+
+    var init = function (_url, _serial, _csrf) {
+        url = _url;
+        serial = _serial;
+        csrf = _csrf;
+
+        setInterval(update, 2000);
+
+        $('.section').each(function () {
+            sections.push($(this));
+        });
+    };
+
+    return {
+        init: init
+    }
+}(jQuery));

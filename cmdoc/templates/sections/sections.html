@@ -1,7 +1,7 @@
 {% load markup %}
 
 {% for section in sections %}
-    <div id="sec-{{ section.id }}" class="section" data-position="{{ section.position }}" data-id="{{ section.id }}" data-edit-url="{% url 'section:update' section.document.id section.id %}">
+    <div id="sec-{{ section.id }}" class="section" data-position="{{ section.position }}" data-id="{{ section.id }}" data-edit-url="{% url 'section:update' section.document.id section.id %}" data-serial="{{ section.serial }}">
         <div class="menu-bar right">
 
             <span class="label secondary radius" data-tooltip title="Modifier: {{ section.modifier }} {% if section.message %} <br> Message: {{ section.message }} {% endif %}">
