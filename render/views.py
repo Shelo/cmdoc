@@ -17,7 +17,7 @@ def raw(request, document_id):
 
     content = '\n\n'.join([section.content for section in sections])
 
-    return HttpResponse(content, content_type='text/plain')
+    return HttpResponse(content, content_type='text/plain; charset=utf-8')
 
 
 @decorators.belongs_to_document
@@ -39,15 +39,13 @@ def latex(request, document_id):
 
     content = '\n\n'.join([section.content for section in sections])
 
-    temp = tempfile.NamedTemporaryFile(delete=False)
+    temp = codecs.open(os.path.join(settings.MEDIA_ROOT, str(document_id) + ".md"), "w+", "utf-8")
     temp.write(content)
     temp.close()
 
     latex_code = subprocess.check_output(["pandoc", "-f", "markdown", "-t", "latex", temp.name])
 
-    os.remove(temp.name)
-
-    return HttpResponse(latex_code, content_type='text/plain')
+    return HttpResponse(latex_code, content_type='text/plain; charset=utf-8')
 
 
 @decorators.belongs_to_document
