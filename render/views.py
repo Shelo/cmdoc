@@ -74,7 +74,7 @@ def pdf(request, document_id):
             "-o", output_pdf_real,
         ])
     except Exception as e:
-        return HttpResponse(output + "\n\n" + e.message, content_type='text/plain')
+        return HttpResponse(e, content_type='text/plain')
     finally:
         os.remove(temp.name)
 
