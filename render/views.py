@@ -61,7 +61,7 @@ def pdf(request, document_id):
     temp.write(content)
     temp.close()
 
-    output_pdf = os.path.join(settings.STATIC_URL, str(document_id))
+    output_pdf = os.path.join(settings.STATIC_URL, str(document_id)) + ".pdf"
 
     subprocess.check_output([
         "pandoc",
