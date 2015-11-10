@@ -57,25 +57,18 @@ def pdf(request, document_id):
 
     content = '\n\n'.join([section.content for section in sections])
 
-    temp = tempfile.NamedTemporaryFile(delete=False)
-    temp.write(content)
-    temp.close()
-
     output_pdf_url = os.path.join(settings.MEDIA_URL, str(document_id) + ".pdf")
     output_pdf_real = os.path.join(settings.MEDIA_ROOT, str(document_id) + ".pdf")
 
-    output = ""
+    temp = open(os.path.join(settings.MEDIA_ROOT, str(document_id) + ".md"), "w+")
+    temp.write(content)
+    temp.close()
 
-    try:
-        output = subprocess.check_output([
-            "pandoc",
-            temp.name,
-            "--latex-engine=pdflatex",
-            "-o", output_pdf_real,
-        ])
-    except Exception as e:
-        return HttpResponse(e, content_type='text/plain')
-    finally:
-        os.remove(temp.name)
+    output = subprocess.check_output([
+        "pandoc",
+        temp.name,
+        "--latex-engine=pdflatex",
+        "-o", output_pdf_real,
+    ])
 
     return HttpResponseRedirect(output_pdf_url)
