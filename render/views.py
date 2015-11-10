@@ -62,9 +62,10 @@ def pdf(request, document_id):
     temp.close()
 
     output_pdf_url = os.path.join(settings.MEDIA_URL, str(document_id) + ".pdf")
-    output_pdf_real = os.path.join(settings.BASE_DIR, "media", str(document_id) + ".pdf")
+    output_pdf_real = os.path.join(settings.MEDIA_ROOT, str(document_id) + ".pdf")
 
     output = ""
+
     try:
         output = subprocess.check_output([
             "pandoc",
@@ -72,8 +73,8 @@ def pdf(request, document_id):
             "--latex-engine=pdflatex",
             "-o", output_pdf_real,
         ])
-    except:
-        return HttpResponse(output, content_type='text/plain')
+    except Exception as e:
+        return HttpResponse(output + "\n\n" + e.message, content_type='text/plain')
     finally:
         os.remove(temp.name)
 
