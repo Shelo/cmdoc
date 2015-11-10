@@ -61,18 +61,18 @@ def pdf(request, document_id):
     temp.write(content)
     temp.close()
 
-    output_pdf = os.path.join(settings.STATIC_URL, str(document_id)) + ".pdf"
-    output_pdf = os.path.join("/var/www/cmdoc/media/", str(document_id) + ".pdf")
+    output_pdf_url = os.path.join(settings.MEDIA_URL, str(document_id) + ".pdf")
+    output_pdf_real = os.path.join("/var/www/cmdoc/media/", str(document_id) + ".pdf")
 
     output = subprocess.check_output([
         "pandoc",
         temp.name,
         "--latex-engine=pdflatex",
-        "-o", output_pdf,
+        "-o", output_pdf_real,
     ])
 
     print output
 
     os.remove(temp.name)
 
-    return HttpResponseRedirect(output_pdf)
+    return HttpResponseRedirect(output_pdf_url)
