@@ -159,9 +159,14 @@
 
             <h6 class="uppercase">Download</h6>
             <ul class="side-nav">
-                <li><a href="#"><i class="fi-page-export-pdf"></i> Download as PDF</a></li>
                 <li>
-                    <a href="{% url 'render:latex' document.id %}" target="_blank">
+                    <a target="_blank" href="{% url 'render:pdf' document.id %}">
+                        <i class="fi-page-export-pdf"></i> Download as PDF
+                    </a>
+                </li>
+
+                <li>
+                    <a target="_blank" href="{% url 'render:latex' document.id %}">
                         <i class="fi-page-export-doc"></i> Download as LaTeX
                     </a>
                 </li>

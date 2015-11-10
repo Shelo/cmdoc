@@ -62,7 +62,7 @@ def pdf(request, document_id):
     temp.close()
 
     output_pdf_url = os.path.join(settings.MEDIA_URL, str(document_id) + ".pdf")
-    output_pdf_real = os.path.join("/var/www/cmdoc/media/", str(document_id) + ".pdf")
+    output_pdf_real = os.path.join(settings.BASE_DIR, "media", str(document_id) + ".pdf")
 
     output = subprocess.check_output([
         "pandoc",
