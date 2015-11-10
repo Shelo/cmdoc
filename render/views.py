@@ -62,13 +62,16 @@ def pdf(request, document_id):
     temp.close()
 
     output_pdf = os.path.join(settings.STATIC_URL, str(document_id)) + ".pdf"
+    output_pdf = os.path.join("/var/www/cmdoc/media/", str(document_id) + ".pdf")
 
-    subprocess.check_output([
+    output = subprocess.check_output([
         "pandoc",
         temp.name,
         "--latex-engine=pdflatex",
         "-o", output_pdf,
     ])
+
+    print output
 
     os.remove(temp.name)
 
