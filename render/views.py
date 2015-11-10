@@ -64,15 +64,17 @@ def pdf(request, document_id):
     output_pdf_url = os.path.join(settings.MEDIA_URL, str(document_id) + ".pdf")
     output_pdf_real = os.path.join(settings.BASE_DIR, "media", str(document_id) + ".pdf")
 
-    output = subprocess.check_output([
-        "pandoc",
-        temp.name,
-        "--latex-engine=pdflatex",
-        "-o", output_pdf_real,
-    ])
-
-    print output
-
-    os.remove(temp.name)
+    output = ""
+    try:
+        output = subprocess.check_output([
+            "pandoc",
+            temp.name,
+            "--latex-engine=pdflatex",
+            "-o", output_pdf_real,
+        ])
+    except:
+        return HttpResponse(output, content_type='text/plain')
+    finally:
+        os.remove(temp.name)
 
     return HttpResponseRedirect(output_pdf_url)
