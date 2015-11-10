@@ -19,4 +19,10 @@ urlpatterns = [
         views.latex,
         name='latex'
     ),
+
+    url(
+        r'^(?P<document_id>[0-9]+)/pdf/',
+        views.pdf,
+        name='pdf'
+    ),
 ]
