@@ -65,10 +65,9 @@ def pdf(request, document_id):
 
     subprocess.check_output([
         "pandoc",
-        "-f", "markdown",
-        "-t", "latex",
+        temp.name,
+        "--latex-engine=pdflatex",
         "-o", output_pdf,
-        temp.name
     ])
 
     os.remove(temp.name)
